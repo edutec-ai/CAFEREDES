@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>CAFEREDES · Instaladores de Gas</title>
+    
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="css/styles.css" />
+    
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>" />
+</head>
+<body>
+
+    <!-- ===== INTRO OVERLAY ===== -->
+    <div id="introOverlay">
+        <div class="intro-content">
+            <div class="intro-logo" id="logoGasNet">🔥</div>
+            <div class="intro-title" id="tituloGasNet">CAFEREDES</div>
+            <div class="intro-subtitle" id="subtituloGasNet">Instaladores de Redes de Gas</div>
+            <div class="intro-loader" id="introLoader">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div id="loginScreen">
+        <div class="login-box" id="loginBox">
+            <div class="logo">
+                🔥 CAFEREDES <span class="badge">mockup</span>
+            </div>
+            <div class="subtitle">Portal de Gestión · Pereira</div>
+
+            <div class="form-group">
+                <label for="loginUser">Usuario</label>
+                <input type="text" id="loginUser" placeholder="super, auxiliar o instalador" value="super" />
+            </div>
+
+            <div class="form-group">
+                <label for="loginPass">Contraseña</label>
+                <input type="password" id="loginPass" placeholder="••••••" value="123" />
+            </div>
+
+            <div class="switch-container">
+                <span>Recordar credenciales</span>
+                <label class="switch">
+                    <input type="checkbox" checked />
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button class="btn-login" id="loginBtn">Ingresar al Sistema</button>
+
+            <div class="error-msg" id="loginError">⚠️ Usuario o contraseña incorrectos</div>
+
+            <div class="users-hint">
+                <strong>Usuarios de prueba:</strong><br />
+                <code>super / 123</code> · Gerente<br />
+                <code>auxiliar / 123</code> · Asistente<br />
+                <code>instalador / 123</code> · Instalador
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== APP ===== -->
+    <div id="app" style="display:none;">
+
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo">
+                🔥 CAFEREDES <span class="badge">mockup</span>
+            </div>
+            <div class="header-actions">
+                <div class="user-badge">
+                    <div class="avatar" id="userAvatar">G</div>
+                    <div class="user-info">
+                        <div class="name" id="userNameDisplay">Gerente General</div>
+                        <div class="role" id="userRolDisplay">SUPER</div>
+                    </div>
+                </div>
+                <button class="btn-icon" id="resetDataBtn">⟳ Resetear</button>
+                <button class="btn-icon danger" id="logoutBtn">🚪 Salir</button>
+            </div>
+        </header>
+
+        <!-- NAV TABS -->
+        <nav class="nav-tabs" id="navTabs">
+            <!-- Dinámico según rol -->
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content" id="mainContent">
+            <!-- Renderizado dinámico -->
+        </div>
+
+        <!-- ADVANTAGES ROW -->
+        <div style="max-width:1400px; margin:0 auto; width:100%; padding:0 20px 20px 20px;">
+            <div class="advantages-row" id="advantagesRow"></div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalDetalle">
+        <div class="modal-box">
+            <h3 id="modalTitulo">Detalle de Orden</h3>
+            <div id="modalBody"></div>
+            <div class="modal-actions" id="modalActions">
+                <button class="btn-cerrar" id="modalCerrar">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS (ORDEN DE CARGA CORRECTO) ===== -->
+    <script src="js/data.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/intro.js"></script>
+    <script src="js/frontpage.js"></script>
+    <script src="js/ordenes.js"></script>
+    <script src="js/instaladores.js"></script>
+    <!-- ⚠️ recursos.js ELIMINADO ⚠️ -->
+    <script src="js/configuracion.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
