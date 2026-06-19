@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>CAFEREDES · Propuesta Técnica</title>
+    <style>
+        /* ============================================================
+           TOKENS DE DISEÑO
+           ============================================================ */
+        :root {
+            --primary: #0b2b4a;
+            --primary-light: #1a4a6e;
+            --gold: #f9b81b;
+            --gold-light: #fde047;
+            --green: #16a34a;
+            --green-light: #4ade80;
+            --blue: #2563eb;
+            --blue-light: #60a5fa;
+            --red: #dc2626;
+            --red-light: #f87171;
+            --gray-bg: #f0f2f5;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-blur: blur(12px);
+            --radius: 16px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--gray-bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            color: #1a2639;
+        }
+
+        /* ============================================================
+           APP CONTAINER
+           ============================================================ */
+        .app {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            min-height: 90vh;
+            transition: padding 0.3s ease;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid rgba(11, 43, 74, 0.08);
+        }
+
+        .header .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header .logo span {
+            background: var(--gold);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .header .fecha {
+            font-size: 14px;
+            color: #4a5a6e;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* ============================================================
+           MENU PRINCIPAL (CARDS)
+           ============================================================ */
+        .menu-principal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(11, 43, 74, 0.10);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .menu-card.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(11, 43, 74, 0.20);
+        }
+
+        .menu-card.active .card-num {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .menu-card .card-num {
+            display: inline-block;
+            background: rgba(11, 43, 74, 0.08);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+            transition: all var(--transition);
+        }
+
+        .menu-card .card-label {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.3;
+            display: block;
+        }
+
+        .menu-card .card-sub {
+            font-size: 10px;
+            opacity: 0.6;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .menu-card.active .card-sub {
+            opacity: 0.8;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ============================================================
+           CONTENEDOR DE CAPÍTULO
+           ============================================================ */
+        .capitulo-container {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            min-height: 400px;
+            transition: all var(--transition);
+        }
+
+        .capitulo-titulo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .capitulo-sub {
+            font-size: 14px;
+            color: #4a5a6e;
+            margin-bottom: 16px;
+        }
+
+        /* ============================================================
+           TABS (submenú)
+           ============================================================ */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4a5a6e;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: rgba(11, 43, 74, 0.06);
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* ============================================================
+           CONTENIDO DE TABS
+           ============================================================ */
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+           TABLAS INTERACTIVAS
+           ============================================================ */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(11, 43, 74, 0.02);
+        }
+
+        .table-dofa td:first-child {
+            font-weight: 600;
+            background: rgba(11, 43, 74, 0.04);
+            width: 30%;
+        }
+
+        .table-actores td:first-child {
+            font-weight: 600;
+            background: rgba(11, 43, 74, 0.04);
+            width: 18%;
+        }
+
+        .table-resultados td:first-child {
+            font-weight: 600;
+            background: rgba(11, 43, 74, 0.04);
+            width: 12%;
+        }
+
+        /* ============================================================
+           BADGES
+           ============================================================ */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge.verde {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge.azul {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge.amarillo {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge.rojo {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge.gris {
+            background: #eef2f6;
+            color: #2d3a4b;
+        }
+
+        /* ============================================================
+           BOTÓN DE DESCARGA
+           ============================================================ */
+        .btn-descarga {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 4px 16px rgba(11, 43, 74, 0.20);
+            margin-top: 12px;
+        }
+
+        .btn-descarga:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(11, 43, 74, 0.30);
+        }
+
+        /* ============================================================
+           DASHBOARD INTERNO (estadísticas)
+           ============================================================ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            padding: 14px 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card .num {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            font-size: 11px;
+            color: #4a5a6e;
+            font-weight: 500;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ============================================================
+           GRÁFICO VECTORIAL (SVG animado)
+           ============================================================ */
+        .grafico-container {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .grafico-container svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ============================================================
+           ANIMACIONES CSS
+           ============================================================ */
+        .flow-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 16px 0;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: pulse-flow 2.5s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .flow-step:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        .flow-step:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+        .flow-step:nth-child(4) {
+            animation-delay: 1.2s;
+        }
+        .flow-step:nth-child(5) {
+            animation-delay: 1.6s;
+        }
+
+        @keyframes pulse-flow {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.04);
+                opacity: 1;
+            }
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: var(--gold);
+            animation: bounce-arrow 1.8s infinite;
+        }
+
+        @keyframes bounce-arrow {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .app {
+                padding: 16px;
+                min-height: 95vh;
+            }
+
+            .header .logo {
+                font-size: 20px;
+            }
+
+            .header .fecha {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+
+            .menu-principal {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 6px;
+            }
+
+            .menu-card {
+                padding: 10px 6px;
+            }
+
+            .menu-card .card-label {
+                font-size: 10px;
+            }
+
+            .menu-card .card-num {
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+                font-size: 11px;
+            }
+
+            .capitulo-container {
+                padding: 14px;
+                min-height: 300px;
+            }
+
+            .capitulo-titulo {
+                font-size: 17px;
+            }
+
+            .tab-btn {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 6px 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .flow-step {
+                font-size: 10px;
+                padding: 6px 12px;
+            }
+
+            .flow-arrow {
+                font-size: 16px;
+            }
+
+            .btn-descarga {
+                padding: 10px 20px;
+                font-size: 13px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .grafico-container {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-principal {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .menu-card .card-sub {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .flow-animation {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .flow-arrow {
+                animation: bounce-down 1.8s infinite;
+            }
+
+            @keyframes bounce-down {
+                0%,
+                100% {
+                    transform: rotate(90deg) translateY(0);
+                }
+                50% {
+                    transform: rotate(90deg) translateY(4px);
+                }
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            .app {
+                padding: 12px;
+                min-height: auto;
+            }
+
+            .menu-principal {
+                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            }
+
+            .menu-card {
+                padding: 6px 8px;
+            }
+
+            .capitulo-container {
+                min-height: 200px;
+                padding: 12px;
+            }
+
+            .header .logo {
+                font-size: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media print {
+            .app {
+                box-shadow: none;
+                background: white;
+                backdrop-filter: none;
+                padding: 20px;
+            }
+            .menu-principal {
+                display: none;
+            }
+            .btn-descarga {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .capitulo-container {
+                background: white;
+                backdrop-filter: none;
+                border: 1px solid #ddd;
+            }
+            .grafico-container {
+                background: #f8faff;
+            }
+        }
+
+        /* ============================================================
+           UTILITIES
+           ============================================================ */
+        .text-muted {
+            color: #4a5a6e;
+            font-size: 13px;
+        }
+
+        .mt-2 {
+            margin-top: 12px;
+        }
+        .mb-1 {
+            margin-bottom: 8px;
+        }
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            background: #eef2f6;
+            color: #2d3a4b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app" id="app">
+
+        <!-- ============================================================
+        HEADER
+        ============================================================ -->
+        <header class="header">
+            <div class="logo">
+                🔥 CAFEREDES
+                <span>propuesta</span>
+            </div>
+            <div class="fecha" id="fechaActual">Viernes 19 de junio de 2026</div>
+        </header>
+
+        <!-- ============================================================
+        MENÚ PRINCIPAL (7 CARDS)
+        ============================================================ -->
+        <nav class="menu-principal" id="menuPrincipal">
+            <div class="menu-card active" data-capitulo="1">
+                <span class="card-num">1</span>
+                <span class="card-label">Resumen Ejecutivo</span>
+                <span class="card-sub">visión general</span>
+            </div>
+            <div class="menu-card" data-capitulo="2">
+                <span class="card-num">2</span>
+                <span class="card-label">Problema Actual</span>
+                <span class="card-sub">DOFA · actores</span>
+            </div>
+            <div class="menu-card" data-capitulo="3">
+                <span class="card-num">3</span>
+                <span class="card-label">Solución Propuesta</span>
+                <span class="card-sub">5 módulos</span>
+            </div>
+            <div class="menu-card" data-capitulo="4">
+                <span class="card-num">4</span>
+                <span class="card-label">Resultados</span>
+                <span class="card-sub">beneficios DOFA</span>
+            </div>
+            <div class="menu-card" data-capitulo="5">
+                <span class="card-num">5</span>
+                <span class="card-label">Alcance</span>
+                <span class="card-sub">incluye / no incluye</span>
+            </div>
+            <div class="menu-card" data-capitulo="6">
+                <span class="card-num">6</span>
+                <span class="card-label">Tecnología</span>
+                <span class="card-sub">5 componentes</span>
+            </div>
+            <div class="menu-card" data-capitulo="7">
+                <span class="card-num">7</span>
+                <span class="card-label">Mantenimiento</span>
+                <span class="card-sub">backups · soporte</span>
+            </div>
+        </nav>
+
+        <!-- ============================================================
+        CONTENEDOR DE CAPÍTULO
+        ============================================================ -->
+        <section class="capitulo-container" id="capituloContainer">
+            <!-- El contenido se renderiza dinámicamente con JS -->
+        </section>
+
+    </div>
+
+    <!-- ============================================================
+    SCRIPT
+    ============================================================ -->
+    <script>
+        // ============================================================
+        //  DATA DE LA PROPUESTA (fuente de la verdad)
+        // ============================================================
+
+        const DATA = {
+            // Capítulo 1: Resumen Ejecutivo
+            1: {
+                titulo: '1. Resumen Ejecutivo',
+                subtitulo: 'Visión general de la solución',
+                tabs: [],
+                contenido: function() {
+                    return `
+                        <p style="margin-bottom:12px;">
+                            La presente propuesta describe el desarrollo de una <strong>aplicación web personalizada</strong>
+                            para la gestión de órdenes de instalación de gas. La herramienta permitirá:
+                        </p>
+                        <ul style="padding-left:20px; margin-bottom:16px; list-style:disc;">
+                            <li><strong>Importar automáticamente</strong> los archivos Excel que envía la Empresa de Gas.</li>
+                            <li><strong>Centralizar toda la información</strong> en una base de datos en la nube (Google Sheets).</li>
+                            <li><strong>Consultar y filtrar órdenes</strong> por estado, fechas y técnicos.</li>
+                            <li><strong>Generar reportes en PDF y Excel</strong> con la información depurada.</li>
+                            <li><strong>Automatizar la captura de datos</strong> liberando tiempo del asistente administrativo.</li>
+                        </ul>
+                        <p style="margin-bottom:12px;">
+                            La aplicación está diseñada para ser <strong>simple, rápida y accesible desde cualquier dispositivo</strong>
+                            (computador, tablet o celular).
+                        </p>
+                        <p>
+                            La solución permitirá <strong>mejorar el control operativo</strong>, <strong>reducir tiempos de procesamiento</strong>
+                            y <strong>optimizar los recursos financieros</strong> tanto para los actores internos (Gerente, Auxiliar)
+                            como externos (Empresa de Gas, instaladores).
+                        </p>
+                        <div style="margin-top:20px; text-align:center;">
+                            <button class="btn-descarga" onclick="descargarPropuesta()">
+                                ⬇️ Descarga Propuesta PDF
+                            </button>
+                            <p style="font-size:12px; color:#4a5a6e; margin-top:8px;">
+                                El archivo <strong>propuesta.pdf</strong> debe estar en la raíz del proyecto
+                            </p>
+                        </div>
+                    `;
+                }
+            },
+
+            // Capítulo 2: Problema Actual
+            2: {
+                titulo: '2. Problema Actual',
+                subtitulo: 'Diagnóstico de la situación actual',
+                tabs: [
+                    { id: 'dofa', label: '2.1 DOFA' },
+                    { id: 'actores', label: '2.2 Actores' },
+                    { id: 'resumen', label: '2.3 Resumen' }
+                ],
+                contenido: function(tabId) {
+                    const contenidos = {
+                        dofa: `
+                            <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+                                <div style="background:rgba(220,38,38,0.04); border-radius:10px; padding:12px; border-left:3px solid var(--red);">
+                                    <h4 style="color:var(--red); font-size:14px;">DEBILIDADES</h4>
+                                    <ul style="font-size:12px; padding-left:16px; list-style:disc; color:#4a5a6e;">
+                                        <li>⏱️ Proceso manual de limpieza de Excel (2-3 horas por archivo)</li>
+                                        <li>🐛 Errores humanos frecuentes (duplicados, datos mal ingresados)</li>
+                                        <li>📊 Reportes de nómina manuales (propensos a errores)</li>
+                                        <li>💾 Información dispersa en múltiples archivos Excel</li>
+                                        <li>🔒 Sin trazabilidad ni auditoría de cambios</li>
+                                    </ul>
+                                </div>
+                                <div style="background:rgba(220,38,38,0.04); border-radius:10px; padding:12px; border-left:3px solid var(--red);">
+                                    <h4 style="color:var(--red); font-size:14px;">AMENAZAS</h4>
+                                    <ul style="font-size:12px; padding-left:16px; list-style:disc; color:#4a5a6e;">
+                                        <li>📄 Riesgo de pérdida de información por falta de respaldos</li>
+                                        <li>🚫 Dependencia de un solo colaborador</li>
+                                        <li>⏳ Tiempos de respuesta lentos ante consultas de la EG</li>
+                                        <li>💰 Costo de oportunidad por tareas repetitivas</li>
+                                        <li>📉 Riesgo de insatisfacción de la EG por demoras</li>
+                                    </ul>
+                                </div>
+                                <div style="background:rgba(22,163,74,0.04); border-radius:10px; padding:12px; border-left:3px solid var(--green);">
+                                    <h4 style="color:var(--green); font-size:14px;">FORTALEZAS</h4>
+                                    <ul style="font-size:12px; padding-left:16px; list-style:disc; color:#4a5a6e;">
+                                        <li>👤 Equipo con conocimiento del negocio</li>
+                                        <li>📋 Proceso definido (aunque manual)</li>
+                                        <li>✅ El asistente ya tiene experiencia en el proceso</li>
+                                        <li>📊 La información está estructurada</li>
+                                    </ul>
+                                </div>
+                                <div style="background:rgba(22,163,74,0.04); border-radius:10px; padding:12px; border-left:3px solid var(--green);">
+                                    <h4 style="color:var(--green); font-size:14px;">OPORTUNIDADES</h4>
+                                    <ul style="font-size:12px; padding-left:16px; list-style:disc; color:#4a5a6e;">
+                                        <li>📥 El Excel de la EG siempre tiene el mismo formato (automatizable)</li>
+                                        <li>☁️ Google Sheets como repositorio central en la nube</li>
+                                        <li>🤖 Automatización que libera tiempo para tareas de mayor valor</li>
+                                        <li>📈 Posibilidad de escalar a nómina y cuentas por pagar</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="grafico-container">
+                                <svg viewBox="0 0 400 120" style="max-width:100%;">
+                                    <rect x="20" y="80" width="40" height="30" fill="#dc2626" rx="4" opacity="0.7">
+                                        <animate attributeName="height" from="30" to="30" dur="0s" />
+                                    </rect>
+                                    <rect x="80" y="60" width="40" height="50" fill="#dc2626" rx="4" opacity="0.8">
+                                        <animate attributeName="height" from="50" to="50" dur="0s" />
+                                    </rect>
+                                    <rect x="140" y="70" width="40" height="40" fill="#f9b81b" rx="4" opacity="0.8">
+                                        <animate attributeName="height" from="40" to="40" dur="0s" />
+                                    </rect>
+                                    <rect x="200" y="50" width="40" height="60" fill="#16a34a" rx="4" opacity="0.7">
+                                        <animate attributeName="height" from="60" to="60" dur="0s" />
+                                    </rect>
+                                    <rect x="260" y="40" width="40" height="70" fill="#16a34a" rx="4" opacity="0.9">
+                                        <animate attributeName="height" from="70" to="70" dur="0s" />
+                                    </rect>
+                                    <rect x="320" y="30" width="40" height="80" fill="#2563eb" rx="4" opacity="0.8">
+                                        <animate attributeName="height" from="80" to="80" dur="0s" />
+                                    </rect>
+                                    <text x="20" y="110" font-size="8" fill="#4a5a6e" text-anchor="middle">Debilidades</text>
+                                    <text x="80" y="110" font-size="8" fill="#4a5a6e" text-anchor="middle">Amenazas</text>
+                                    <text x="140" y="110" font-size="8" fill="#4a5a6e" text-anchor="middle">Fortalezas</text>
+                                    <text x="200" y="110" font-size="8" fill="#4a5a6e" text-anchor="middle">Oportunidades</text>
+                                    <text x="260" y="110" font-size="8" fill="#4a5a6e" text-anchor="middle">Oportunidades</text>
+                                    <text x="320" y="110" font-size="8" fill="#4a5a6e" text-anchor="middle">Oportunidades</text>
+                                    <text x="40" y="20" font-size="9" fill="#1a2639" text-anchor="middle" font-weight="600">Diagnóstico DOFA</text>
+                                </svg>
+                            </div>
+                        `,
+                        actores: `
+                            <div class="table-wrap">
+                                <table class="table-actores">
+                                    <thead>
+                                        <tr><th>Actor</th><th>Problema actual</th><th>Cómo lo resuelve la app</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Gerente CAFEREDES</strong></td>
+                                            <td>Sin visibilidad en tiempo real. Toma decisiones con datos desactualizados.</td>
+                                            <td>Dashboard con estadísticas en tiempo real. Filtros y reportes automáticos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Auxiliar Administrativo</strong></td>
+                                            <td>Alta inversión de tiempo limpiando Excel y capturando datos. Riesgo de errores.</td>
+                                            <td>Importación automática. Limpieza de columnas. Validación de duplicados.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Instaladores</strong></td>
+                                            <td>Riesgo de retrasos en pago por demoras en cálculo de cuentas por pagar.</td>
+                                            <td>Cálculo automático de nómina. Generación rápida de cuentas por pagar.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Empresa de Gas</strong></td>
+                                            <td>Riesgo de reportes tardíos. Información poco estructurada.</td>
+                                            <td>Reportes en PDF y Excel con formato estandarizado. Entrega rápida.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="flow-animation">
+                                <div class="flow-step">📄 Excel EG</div>
+                                <span class="flow-arrow">➜</span>
+                                <div class="flow-step">🧹 Limpieza</div>
+                                <span class="flow-arrow">➜</span>
+                                <div class="flow-step">☁️ Google Sheets</div>
+                                <span class="flow-arrow">➜</span>
+                                <div class="flow-step">📊 Reportes</div>
+                                <span class="flow-arrow">➜</span>
+                                <div class="flow-step">✅ Entregas</div>
+                            </div>
+                        `,
+                        resumen: `
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr><th>Dimensión</th><th>Problema</th><th>Impacto</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Control</strong></td>
+                                            <td>Sin trazabilidad ni visibilidad en tiempo real</td>
+                                            <td>Decisiones basadas en datos desactualizados</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Tiempo</strong></td>
+                                            <td>Alta inversión de tiempo en limpieza y captura</td>
+                                            <td>Costo de oportunidad, retrasos en reportes</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Dinero</strong></td>
+                                            <td>Errores en nómina, retrasos en pagos</td>
+                                            <td>Insatisfacción, costos administrativos</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card"><span class="num">2-3h</span><span class="label">por archivo</span></div>
+                                <div class="stat-card"><span class="num">80%</span><span class="label">reducción potencial</span></div>
+                                <div class="stat-card"><span class="num">100%</span><span class="label">trazabilidad</span></div>
+                            </div>
+                        `
+                    };
+                    return contenidos[tabId] || contenidos.dofa;
+                }
+            },
+
+            // Capítulo 3: Solución Propuesta
+            3: {
+                titulo: '3. Solución Propuesta',
+                subtitulo: '5 módulos funcionales',
+                tabs: [
+                    { id: 'importacion', label: '3.1 Importación' },
+                    { id: 'consultas', label: '3.2 Consultas' },
+                    { id: 'reportes', label: '3.3 Reportes' },
+                    { id: 'nube', label: '3.4 Nube' },
+                    { id: 'offline', label: '3.5 Offline' }
+                ],
+                contenido: function(tabId) {
+                    const contenidos = {
+                        importacion: `
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                                <div>
+                                    <h4 style="font-size:14px; color:var(--primary);">📥 Importación automática</h4>
+                                    <ul style="font-size:13px; padding-left:18px; list-style:disc; color:#4a5a6e;">
+                                        <li>El asistente <strong>sube el archivo</strong> que envía la Empresa de Gas.</li>
+                                        <li>La aplicación <strong>limpia automáticamente</strong> las columnas innecesarias.</li>
+                                        <li>La aplicación <strong>valida</strong> que no haya registros duplicados.</li>
+                                        <li>La información se guarda directamente en la <strong>nube (Google Sheets)</strong>.</li>
+                                    </ul>
+                                </div>
+                                <div style="background:rgba(11,43,74,0.04); border-radius:10px; padding:16px; border:1px solid rgba(11,43,74,0.06);">
+                                    <h4 style="font-size:14px; color:var(--primary);">📊 Beneficio clave</h4>
+                                    <p style="font-size:13px; color:#4a5a6e;">Reducción de <strong>2-3 horas</strong> por archivo en limpieza manual.</p>
+                                    <div style="margin-top:8px; background:var(--green); height:6px; border-radius:4px; width:80%;">
+                                        <div style="background:var(--gold); height:6px; border-radius:4px; width:80%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        consultas: `
+                            <div>
+                                <h4 style="font-size:14px; color:var(--primary);">🔍 Consultas y filtros</h4>
+                                <p style="font-size:13px; color:#4a5a6e; margin:8px 0;">Desde la aplicación se podrá:</p>
+                                <ul style="font-size:13px; padding-left:18px; list-style:disc; color:#4a5a6e;">
+                                    <li><strong>Filtrar órdenes por estado</strong> (Generadas, Intervenidas, Revisadas).</li>
+                                    <li><strong>Filtrar por fechas</strong> (semana, mes, período personalizado).</li>
+                                    <li><strong>Filtrar por técnico</strong> asignado.</li>
+                                    <li><strong>Buscar por orden, dirección o cliente</strong>.</li>
+                                </ul>
+                                <div class="stats-grid" style="grid-template-columns:repeat(4,1fr); margin-top:12px;">
+                                    <div class="stat-card"><span class="num">📌</span><span class="label">Por estado</span></div>
+                                    <div class="stat-card"><span class="num">📅</span><span class="label">Por fecha</span></div>
+                                    <div class="stat-card"><span class="num">👤</span><span class="label">Por técnico</span></div>
+                                    <div class="stat-card"><span class="num">🔎</span><span class="label">Búsqueda</span></div>
+                                </div>
+                            </div>
+                        `,
+                        reportes: `
+                            <div>
+                                <h4 style="font-size:14px; color:var(--primary);">📊 Reportes automáticos</h4>
+                                <ul style="font-size:13px; padding-left:18px; list-style:disc; color:#4a5a6e;">
+                                    <li><strong>Exportar a Excel</strong> con el formato personalizado de CAFEREDES.</li>
+                                    <li><strong>Exportar a PDF</strong> para enviar a la Empresa de Gas.</li>
+                                    <li><strong>Cuentas por pagar</strong>: cálculo automático de lo que se debe pagar a cada instalador.</li>
+                                </ul>
+                                <div class="flow-animation" style="padding:12px 0;">
+                                    <div class="flow-step">📄 Datos</div>
+                                    <span class="flow-arrow">➜</span>
+                                    <div class="flow-step">📊 Excel</div>
+                                    <span class="flow-arrow">➜</span>
+                                    <div class="flow-step">📋 PDF</div>
+                                    <span class="flow-arrow">➜</span>
+                                    <div class="flow-step">💰 Nómina</div>
+                                </div>
+                            </div>
+                        `,
+                        nube: `
+                            <div>
+                                <h4 style="font-size:14px; color:var(--primary);">☁️ Almacenamiento en la nube</h4>
+                                <ul style="font-size:13px; padding-left:18px; list-style:disc; color:#4a5a6e;">
+                                    <li><strong>Google Sheets</strong> actuará como repositorio central.</li>
+                                    <li>Toda la información estará <strong>respaldada en la nube</strong>.</li>
+                                    <li>Acceso desde <strong>cualquier dispositivo</strong> con conexión a internet.</li>
+                                    <li><strong>Sincronización automática</strong>: cuando un dispositivo se conecta, descarga los datos nuevos.</li>
+                                </ul>
+                                <div class="grafico-container" style="margin-top:12px;">
+                                    <svg viewBox="0 0 400 80" style="max-width:100%;">
+                                        <rect x="20" y="20" width="60" height="40" fill="#0b2b4a" rx="6" opacity="0.8"/>
+                                        <text x="50" y="45" font-size="10" fill="white" text-anchor="middle">App</text>
+                                        <text x="50" y="75" font-size="8" fill="#4a5a6e" text-anchor="middle">LocalStorage</text>
+                                        <line x1="80" y1="40" x2="150" y2="40" stroke="#f9b81b" stroke-width="2" stroke-dasharray="4,4"/>
+                                        <text x="115" y="30" font-size="8" fill="#f9b81b" text-anchor="middle">⟳ sincro</text>
+                                        <rect x="150" y="10" width="80" height="50" fill="#2563eb" rx="6" opacity="0.8"/>
+                                        <text x="190" y="40" font-size="10" fill="white" text-anchor="middle">Google Sheets</text>
+                                        <text x="190" y="70" font-size="8" fill="#4a5a6e" text-anchor="middle">☁️ Nube</text>
+                                        <line x1="230" y1="35" x2="310" y2="35" stroke="#f9b81b" stroke-width="2" stroke-dasharray="4,4"/>
+                                        <text x="270" y="25" font-size="8" fill="#f9b81b" text-anchor="middle">⟳ sincro</text>
+                                        <rect x="310" y="10" width="70" height="50" fill="#16a34a" rx="6" opacity="0.8"/>
+                                        <text x="345" y="40" font-size="10" fill="white" text-anchor="middle">Backup</text>
+                                        <text x="345" y="70" font-size="8" fill="#4a5a6e" text-anchor="middle">🛡️ Drive</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        `,
+                        offline: `
+                            <div>
+                                <h4 style="font-size:14px; color:var(--primary);">📱 Offline (caché local)</h4>
+                                <ul style="font-size:13px; padding-left:18px; list-style:disc; color:#4a5a6e;">
+                                    <li>La aplicación guarda una <strong>copia local</strong> en el dispositivo.</li>
+                                    <li>Las consultas y reportes funcionan <strong>sin conexión a internet</strong>.</li>
+                                    <li>Al volver a conectarse, la app <strong>se sincroniza automáticamente</strong>.</li>
+                                </ul>
+                                <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+                                    <div class="stat-card"><span class="num">📶</span><span class="label">Sin internet</span></div>
+                                    <div class="stat-card"><span class="num">⚡</span><span class="label">Rápido</span></div>
+                                    <div class="stat-card"><span class="num">🔄</span><span class="label">Sincro automática</span></div>
+                                </div>
+                            </div>
+                        `
+                    };
+                    return contenidos[tabId] || contenidos.importacion;
+                }
+            },
+
+            // Capítulo 4: Resultados
+            4: {
+                titulo: '4. Resultados de la Implementación',
+                subtitulo: 'Beneficios correlacionados con la DOFA',
+                tabs: [],
+                contenido: function() {
+                    return `
+                        <div class="table-wrap">
+                            <table class="table-resultados">
+                                <thead>
+                                    <tr><th>Dimensión</th><th>Problema (DOFA)</th><th>Solución con la app</th><th>Resultado esperado</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge amarillo">⏱️ Tiempo</span></td>
+                                        <td>Debilidad: 2-3 horas por archivo en limpieza manual</td>
+                                        <td>Importación automática + limpieza de columnas</td>
+                                        <td><strong>Reducción del 80%</strong> del tiempo de procesamiento</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge azul">✅ Control</span></td>
+                                        <td>Amenaza: Sin trazabilidad ni auditoría</td>
+                                        <td>Sincronización automática con Google Sheets</td>
+                                        <td><strong>Visibilidad en tiempo real</strong> de todas las órdenes</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge verde">💰 Dinero</span></td>
+                                        <td>Oportunidad: Cálculo manual de nómina</td>
+                                        <td>Módulo de cuentas por pagar automático</td>
+                                        <td><strong>Ahorro financiero</strong>: pagos puntuales, sin errores</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge azul">🛡️ Protección</span></td>
+                                        <td>Amenaza: Riesgo de pérdida de información</td>
+                                        <td>Backups automáticos en Google Drive</td>
+                                        <td><strong>Información protegida</strong> con respaldos semanales</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge verde">🤖 Productividad</span></td>
+                                        <td>Debilidad: Dependencia de un solo colaborador</td>
+                                        <td>App accesible desde cualquier dispositivo</td>
+                                        <td><strong>Autonomía</strong>: cualquier persona puede consultar</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge amarillo">📊 Reportes</span></td>
+                                        <td>Fortaleza: Proceso definido</td>
+                                        <td>Generación automática de reportes PDF/Excel</td>
+                                        <td><strong>Entregas rápidas</strong> a la Empresa de Gas</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge verde">👥 Satisfacción</span></td>
+                                        <td>Oportunidad: Mejorar relación con EG</td>
+                                        <td>Reportes estandarizados y oportunos</td>
+                                        <td><strong>Mejora en la relación</strong> con la Empresa de Gas</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><span class="num">80%</span><span class="label">menos tiempo</span></div>
+                            <div class="stat-card"><span class="num">100%</span><span class="label">trazabilidad</span></div>
+                            <div class="stat-card"><span class="num">💰</span><span class="label">ahorro financiero</span></div>
+                            <div class="stat-card"><span class="num">🛡️</span><span class="label">protección</span></div>
+                        </div>
+                    `;
+                }
+            },
+
+            // Capítulo 5: Alcance
+            5: {
+                titulo: '5. Alcance del Proyecto',
+                subtitulo: 'Qué incluye y qué no incluye',
+                tabs: [
+                    { id: 'incluye', label: '5.1 Incluye' },
+                    { id: 'no_incluye', label: '5.2 No incluye' }
+                ],
+                contenido: function(tabId) {
+                    const contenidos = {
+                        incluye: `
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr><th>Módulo</th><th>Descripción</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>Importación de Excel</strong></td><td>Subir archivo Excel, limpieza automática, validación de duplicados</td></tr>
+                                        <tr><td><strong>Dashboard</strong></td><td>Resumen de órdenes por estado, estadísticas visuales</td></tr>
+                                        <tr><td><strong>Consulta de órdenes</strong></td><td>Filtros por estado, fechas, técnico, búsqueda por texto</td></tr>
+                                        <tr><td><strong>Exportación Excel</strong></td><td>Generar archivo en el formato personalizado de CAFEREDES</td></tr>
+                                        <tr><td><strong>Exportación PDF</strong></td><td>Generar reporte en PDF</td></tr>
+                                        <tr><td><strong>Nómina / Cuentas por pagar</strong></td><td>Cálculo automático basado en órdenes completadas</td></tr>
+                                        <tr><td><strong>Google Sheets</strong></td><td>Sincronización automática con la nube</td></tr>
+                                        <tr><td><strong>Backups</strong></td><td>Copias de seguridad gestionadas por el proveedor</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="grafico-container">
+                                <svg viewBox="0 0 400 60" style="max-width:100%;">
+                                    <rect x="10" y="10" width="50" height="30" fill="#0b2b4a" rx="4" opacity="0.7"/>
+                                    <text x="35" y="30" font-size="8" fill="white" text-anchor="middle">Excel</text>
+                                    <line x1="60" y1="25" x2="80" y2="25" stroke="#f9b81b" stroke-width="1.5"/>
+                                    <rect x="80" y="10" width="50" height="30" fill="#2563eb" rx="4" opacity="0.8"/>
+                                    <text x="105" y="30" font-size="8" fill="white" text-anchor="middle">Dashboard</text>
+                                    <line x1="130" y1="25" x2="150" y2="25" stroke="#f9b81b" stroke-width="1.5"/>
+                                    <rect x="150" y="10" width="50" height="30" fill="#16a34a" rx="4" opacity="0.7"/>
+                                    <text x="175" y="30" font-size="8" fill="white" text-anchor="middle">Reportes</text>
+                                    <line x1="200" y1="25" x2="220" y2="25" stroke="#f9b81b" stroke-width="1.5"/>
+                                    <rect x="220" y="10" width="50" height="30" fill="#f9b81b" rx="4" opacity="0.8"/>
+                                    <text x="245" y="30" font-size="8" fill="#0b2b4a" text-anchor="middle">Nómina</text>
+                                    <line x1="270" y1="25" x2="290" y2="25" stroke="#f9b81b" stroke-width="1.5"/>
+                                    <rect x="290" y="10" width="50" height="30" fill="#8b5cf6" rx="4" opacity="0.7"/>
+                                    <text x="315" y="30" font-size="8" fill="white" text-anchor="middle">Nube</text>
+                                    <line x1="340" y1="25" x2="360" y2="25" stroke="#f9b81b" stroke-width="1.5"/>
+                                    <rect x="360" y="10" width="30" height="30" fill="#dc2626" rx="4" opacity="0.7"/>
+                                    <text x="375" y="30" font-size="8" fill="white" text-anchor="middle">Backup</text>
+                                </svg>
+                            </div>
+                        `,
+                        no_incluye: `
+                            <ul style="font-size:14px; padding-left:20px; list-style:disc; color:#4a5a6e;">
+                                <li>Aplicación móvil nativa (será una app web responsiva)</li>
+                                <li>Integración directa con el sistema contable de CAFEREDES</li>
+                                <li>Gestión de inventario de materiales</li>
+                            </ul>
+                            <div style="margin-top:16px; padding:16px; background:rgba(220,38,38,0.04); border-radius:10px; border:1px solid rgba(220,38,38,0.08);">
+                                <p style="font-size:13px; color:#4a5a6e;">
+                                    <strong>Nota:</strong> Estos elementos están fuera del alcance de esta propuesta, pero pueden ser considerados en futuras fases.
+                                </p>
+                            </div>
+                        `
+                    };
+                    return contenidos[tabId] || contenidos.incluye;
+                }
+            },
+
+            // Capítulo 6: Tecnología
+            6: {
+                titulo: '6. Tecnología',
+                subtitulo: '5 componentes tecnológicos',
+                tabs: [],
+                contenido: function() {
+                    return `
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr><th style="width:10%;">#</th><th>Componente</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>1</strong></td><td>Aplicación Web HTML / CSS / JS</td></tr>
+                                    <tr><td><strong>2</strong></td><td>Datos en la nube con caché local</td></tr>
+                                    <tr><td><strong>3</strong></td><td>Reportes Excel</td></tr>
+                                    <tr><td><strong>4</strong></td><td>Reportes PDF</td></tr>
+                                    <tr><td><strong>5</strong></td><td>Sistema de Backups</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="stats-grid" style="grid-template-columns:repeat(5,1fr);">
+                            <div class="stat-card"><span class="num">🌐</span><span class="label">Web</span></div>
+                            <div class="stat-card"><span class="num">☁️</span><span class="label">Nube</span></div>
+                            <div class="stat-card"><span class="num">📊</span><span class="label">Excel</span></div>
+                            <div class="stat-card"><span class="num">📋</span><span class="label">PDF</span></div>
+                            <div class="stat-card"><span class="num">🛡️</span><span class="label">Backup</span></div>
+                        </div>
+                        <div class="grafico-container" style="padding:12px;">
+                            <svg viewBox="0 0 400 60" style="max-width:100%;">
+                                <circle cx="50" cy="30" r="20" fill="#0b2b4a" opacity="0.8"/>
+                                <text x="50" y="35" font-size="10" fill="white" text-anchor="middle">HTML</text>
+                                <circle cx="130" cy="30" r="20" fill="#2563eb" opacity="0.8"/>
+                                <text x="130" y="35" font-size="10" fill="white" text-anchor="middle">CSS</text>
+                                <circle cx="210" cy="30" r="20" fill="#f9b81b" opacity="0.8"/>
+                                <text x="210" y="35" font-size="10" fill="#0b2b4a" text-anchor="middle">JS</text>
+                                <circle cx="290" cy="30" r="20" fill="#16a34a" opacity="0.8"/>
+                                <text x="290" y="35" font-size="10" fill="white" text-anchor="middle">API</text>
+                                <circle cx="370" cy="30" r="20" fill="#8b5cf6" opacity="0.8"/>
+                                <text x="370" y="35" font-size="10" fill="white" text-anchor="middle">Cloud</text>
+                            </svg>
+                        </div>
+                    `;
+                }
+            },
+
+            // Capítulo 7: Mantenimiento
+            7: {
+                titulo: '7. Mantenimiento y Soporte',
+                subtitulo: 'Servicios post-implementación',
+                tabs: [],
+                contenido: function() {
+                    return `
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr><th style="width:25%;">Servicio</th><th>Descripción</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Backups</strong></td>
+                                        <td>Copias de seguridad semanales de la base de datos</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Soporte</strong></td>
+                                        <td>Correo electrónico para dudas o incidentes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+                            <div class="stat-card" style="border-left:3px solid var(--green);">
+                                <span class="num">🛡️</span>
+                                <span class="label">Backups semanales</span>
+                            </div>
+                            <div class="stat-card" style="border-left:3px solid var(--blue);">
+                                <span class="num">📧</span>
+                                <span class="label">Soporte por correo</span>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px; padding:16px; background:rgba(11,43,74,0.04); border-radius:10px; text-align:center;">
+                            <p style="font-size:13px; color:#4a5a6e;">
+                                <strong>CAFEREDES</strong> · Aplicación de Gestión de Órdenes<br />
+                                Propuesta técnica elaborada por <strong>Héctor Fabio Hoyos</strong> · Viernes 19 de junio de 2026
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        // ============================================================
+        //  FUNCIONES DE RENDERIZADO
+        // ============================================================
+
+        let capituloActual = 1;
+        let tabActual = null;
+
+        function renderCapitulo(numero) {
+            const data = DATA[numero];
+            if (!data) return;
+
+            capituloActual = numero;
+            const container = document.getElementById('capituloContainer');
+
+            // Actualizar menú
+            document.querySelectorAll('.menu-card').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.capitulo) === numero);
+            });
+
+            // Construir tabs si existen
+            let tabsHtml = '';
+            let primerTab = null;
+
+            if (data.tabs && data.tabs.length > 0) {
+                primerTab = data.tabs[0].id;
+                tabsHtml = `
+                    <div class="tabs">
+                        ${data.tabs.map(t => `
+                            <button class="tab-btn ${t.id === primerTab ? 'active' : ''}" data-tab="${t.id}">
+                                ${t.label}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Construir contenido de tabs
+            let contenidoHtml = '';
+            if (data.tabs && data.tabs.length > 0) {
+                contenidoHtml = data.tabs.map(t => `
+                    <div class="tab-content ${t.id === primerTab ? 'active' : ''}" data-tab="${t.id}">
+                        ${data.contenido(t.id)}
+                    </div>
+                `).join('');
+            } else {
+                contenidoHtml = `<div class="tab-content active">${data.contenido()}</div>`;
+            }
+
+            container.innerHTML = `
+                <div class="capitulo-titulo">${data.titulo}</div>
+                <div class="capitulo-sub">${data.subtitulo}</div>
+                ${tabsHtml}
+                ${contenidoHtml}
+            `;
+
+            // Eventos de tabs
+            container.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    // Actualizar botones
+                    container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // Actualizar contenido
+                    container.querySelectorAll('.tab-content').forEach(el => {
+                        el.classList.toggle('active', el.dataset.tab === tabId);
+                    });
+                    tabActual = tabId;
+                });
+            });
+
+            tabActual = primerTab;
+        }
+
+        // ============================================================
+        //  DESCARGA DE PDF
+        // ============================================================
+
+        function descargarPropuesta() {
+            // Crear un enlace para descargar el archivo propuesta.pdf
+            const link = document.createElement('a');
+            link.href = 'propuesta.pdf';
+            link.download = 'Propuesta_CAFEREDES_2026-06-19.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ============================================================
+        //  INICIALIZACIÓN
+        // ============================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fecha actual
+            const hoy = new Date();
+            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaStr = hoy.toLocaleDateString('es-ES', opciones);
+            document.getElementById('fechaActual').textContent = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
+
+            // Eventos del menú principal
+            document.querySelectorAll('.menu-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const num = parseInt(this.dataset.capitulo);
+                    renderCapitulo(num);
+                });
+            });
+
+            // Renderizar capítulo inicial (1)
+            renderCapitulo(1);
+
+            // Hacer visible la función de descarga globalmente
+            window.descargarPropuesta = descargarPropuesta;
+        });
+
+        // ============================================================
+        //  HACER FUNCIONES GLOBALES PARA EL HTML
+        // ============================================================
+
+        // Para que el botón de descarga en el HTML funcione
+        window.descargarPropuesta = descargarPropuesta;
+    </script>
+
+</body>
+</html>
